@@ -2,7 +2,74 @@
 @using PracticaParcial.Controllers;
 @using PracticaParcial.Entidades;
 
-<h1>Registro de prestamos</h1>
+    <div class="container">
+
+        <h1>Registro de prestamos</h1>
+
+        <EditForm Model="Prestamo" OnValidSubmit="Guardar">
+            <DataAnnotationsValidator />
+
+            <div class="form-group">
+                <label for="PrestamoId">Codigo del prestamo</label>
+                <div class="form-inline">
+                    <InputNumber @bind-Value="Prestamo.PrestamoId" class="form-control col-4" />
+                    <button type="button" class="btn btn-outline-dark" style="margin:10px" @onclick="Buscar">Buscar</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Nombres">Nombres</label>
+                <InputText @bind-Value="Prestamo.Nombres" class="form-control" />
+                <ValidationMessage For="@(() => Prestamo.Nombres)" />
+            </div>
+
+            <div class="form-group">
+                <label for="Fecha">Fecha</label>
+                <InputDate @bind-Value="Prestamo.Fecha" class="form-control" />
+                <ValidationMessage For="@(() => Prestamo.Fecha)" />
+            </div>
+
+            <div class="form-group">
+                <label for="Telefono">Telefono</label>
+                <InputText @bind-Value="Prestamo.Telefono" class="form-control" />
+                <ValidationMessage For="@(() => Prestamo.Telefono)" />
+            </div>
+
+            <div class="form-group">
+                <label for="Correo">Correo</label>
+                <InputText @bind-Value="Prestamo.Correo" class="form-control" />
+                <ValidationMessage For="@(() => Prestamo.Correo)" />
+            </div>
+
+            <div class="form-group">
+                <label for="Capital">Capital</label>
+                <InputNumber @bind-Value="Prestamo.Capital" class="form-control" />
+                <ValidationMessage For="@(() => Prestamo.Capital)" />
+            </div>
+
+            <div class="form-group">
+                <label for="Semanas">Semanas</label>
+                <InputNumber @bind-Value="Prestamo.Semanas" class="form-control" />
+                <ValidationMessage For="@(() => Prestamo.Semanas)" />
+            </div>
+
+            <div class="form-group">
+                <label for="MontoCuotas">Monto de las cuotas</label>
+                <InputNumber @bind-Value="Prestamo.MontoCuotas" class="form-control" disabled />
+                <ValidationMessage For="@(() => Prestamo.MontoCuotas)" />
+            </div>
+
+            <small class="text-muted">@Mensaje</small>
+
+            <div class="form-group">
+                <button style="margin:15px" type="submit" class="btn btn-success">Guardar</button>
+                <button style="margin:15px" class="btn btn-primary" type="button" @onclick="Limpiar">Limpiar</button>
+                <button style="margin:15px" class="btn btn-danger" type="button" @onclick="Eliminar">Eliminar</button>
+            </div>
+        </EditForm>
+
+    </div>
+
 
 
 
@@ -12,6 +79,12 @@
     public Prestamos Prestamo { get; set; }
     public string Mensaje { get; set; }
 
+    protected override void OnInitialized()
+    {
+        Prestamo = new Prestamos();
+        Mensaje = string.Empty;
+    }
+
     private void Guardar()
     {
         PrestamosController prestamosController = new PrestamosController();
@@ -19,9 +92,10 @@
         {
             if(Prestamo.PrestamoId == 0)
             {
+                Calcular();
                 if (prestamosController.Guardar(Prestamo))
                 {
-                    this.Prestamo = new Prestamos();
+                    Limpiar();
                     Mensaje = "Prestamo Guardado!..";
                 }
                 else
@@ -31,9 +105,10 @@
             }
             else
             {
+                Calcular();
                 if (prestamosController.Modificar(Prestamo))
                 {
-                    this.Prestamo = new Prestamos();
+                    Limpiar();
                     Mensaje = "Prestamo Modificado!..";
                 }
                 else
@@ -65,6 +140,7 @@
             else
             {
                 Mensaje = "Este prestamo no existe";
+                Limpiar();
             }
         }
         catch(Exception)
@@ -82,6 +158,7 @@
             if (prestamosController.Eliminar(Prestamo.PrestamoId))
             {
                 Mensaje = "Prestamo eliminado con exito!...";
+                Limpiar();
             }
             else
             {
@@ -96,8 +173,13 @@
 
     private void Limpiar()
     {
-        Prestamo = new Prestamos();
+        this.Prestamo = new Prestamos();
         Mensaje = string.Empty;
+    }
+
+    private void Calcular()
+    {
+        Prestamo.MontoCuotas = Prestamo.Capital / Prestamo.Semanas;
     }
 
 }
