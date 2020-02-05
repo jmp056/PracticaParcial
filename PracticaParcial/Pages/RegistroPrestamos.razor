@@ -1,0 +1,105 @@
+﻿@page "/"
+@using PracticaParcial.Controllers;
+@using PracticaParcial.Entidades;
+
+<h1>Registro de prestamos</h1>
+
+
+
+
+@code{
+
+    public Prestamos Prestamo { get; set; }
+    public string Mensaje { get; set; }
+
+    private void Guardar()
+    {
+        PrestamosController prestamosController = new PrestamosController();
+        try
+        {
+            if(Prestamo.PrestamoId == 0)
+            {
+                if (prestamosController.Guardar(Prestamo))
+                {
+                    this.Prestamo = new Prestamos();
+                    Mensaje = "Prestamo Guardado!..";
+                }
+                else
+                {
+                    Mensaje = "No se pudo guardar el prestamo!..";
+                }
+            }
+            else
+            {
+                if (prestamosController.Modificar(Prestamo))
+                {
+                    this.Prestamo = new Prestamos();
+                    Mensaje = "Prestamo Modificado!..";
+                }
+                else
+                {
+                    Mensaje = "No se pudo modificar el prestamo!..";
+                }
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+
+    }
+
+    private void Buscar()
+    {
+        PrestamosController prestamosController = new PrestamosController();
+
+        try
+        {
+            Prestamos PrestamoTemporal = null;
+            PrestamoTemporal = prestamosController.Buscar(Prestamo.PrestamoId);
+
+            if(PrestamoTemporal != null)
+            {
+                Prestamo = PrestamoTemporal;
+            }
+            else
+            {
+                Mensaje = "Este prestamo no existe";
+            }
+        }
+        catch(Exception)
+        {
+            throw;
+        }
+    }
+
+    private void Eliminar()
+    {
+        PrestamosController prestamosController = new PrestamosController();
+
+        try
+        {
+            if (prestamosController.Eliminar(Prestamo.PrestamoId))
+            {
+                Mensaje = "Prestamo eliminado con exito!...";
+            }
+            else
+            {
+                Mensaje = "El prestamo no pudo ser eliminado!...";
+            }
+        }
+        catch(Exception)
+        {
+            throw;
+        }
+    }
+
+    private void Limpiar()
+    {
+        Prestamo = new Prestamos();
+        Mensaje = string.Empty;
+    }
+
+}
+
+
