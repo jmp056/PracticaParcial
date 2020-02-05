@@ -40,7 +40,7 @@ namespace PracticaParcial.Controllers
 
             try
             {
-                contexto.Entry(Prestamo).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                contexto.Entry(Prestamo).State = EntityState.Modified;
                 paso = contexto.SaveChanges() > 0;
             }
             catch (Exception)

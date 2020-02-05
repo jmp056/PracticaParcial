@@ -105,15 +105,22 @@
             }
             else
             {
-                Calcular();
-                if (prestamosController.Modificar(Prestamo))
+                if (prestamosController.Buscar(Prestamo.PrestamoId) != null)
                 {
-                    Limpiar();
-                    Mensaje = "Prestamo Modificado!..";
+                    Calcular();
+                    if (prestamosController.Modificar(Prestamo))
+                    {
+                        Limpiar();
+                        Mensaje = "Prestamo Modificado!..";
+                    }
+                    else
+                    {
+                        Mensaje = "No se pudo modificar el prestamo!..";
+                    }
                 }
                 else
                 {
-                    Mensaje = "No se pudo modificar el prestamo!..";
+                    Mensaje = "Este prestamo no existe, por ende, no puede ser modificado!..";
                 }
             }
         }
@@ -135,12 +142,13 @@
 
             if(PrestamoTemporal != null)
             {
+                Limpiar();
                 Prestamo = PrestamoTemporal;
             }
             else
             {
-                Mensaje = "Este prestamo no existe";
                 Limpiar();
+                Mensaje = "Este prestamo no existe";
             }
         }
         catch(Exception)
@@ -157,8 +165,8 @@
         {
             if (prestamosController.Eliminar(Prestamo.PrestamoId))
             {
-                Mensaje = "Prestamo eliminado con exito!...";
                 Limpiar();
+                Mensaje = "Prestamo eliminado con exito!...";
             }
             else
             {
